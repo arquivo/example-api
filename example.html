@@ -8,16 +8,20 @@
 <script>
 	function handler(response) {
 		for (var i = 0; i < response.response_items.length; i++) {
-			 var item = response.response_items[i];
+			var item = response.response_items[i];
 			document.getElementById("content").innerHTML +="<br/>"
 			+"<div class=\"col offset-sm-2 col-sm-8 alert alert-primary\" style=\"word-wrap:break-word\">"
 				+ "<a href="+item.linkToArchive+"><h4>"+ item.title+"</h4></a>"
 				+ "<strong><h5 class=\"text-dark\">"+ item.tstamp.substr(0,4) +"</strong></h5>"
-				+ "<h5 class=\"text-muted\"><a>"+ item.originalURL+"</a></h5>";
-		  +"</div><br/>"	;
+				+ "<h5 class=\"text-muted\"><a>"+ item.originalURL+"</a></h5>"
+			+"</div><br/>";
 		}
-	 }
- </script>
- <script src="http://arquivo.pt/textsearch?q=sapo&maxItems=5&itemsPerSite=1&callback=handler"></script>
+	}
+
+	fetch("https://arquivo.pt/textsearch?q=sapo&maxItems=5&itemsPerSite=1")
+		.then(function(res) { return res.json(); })
+		.then(handler)
+		.catch(function(err) { console.error("Error fetching Arquivo.pt API:", err); });
+</script>
 </body>
 </html>
