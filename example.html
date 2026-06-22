@@ -4,8 +4,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<div id="content"></div>
+<div id="content"><p class="text-center text-muted mt-4">Loading...</p></div>
 <script>
+	const content = document.getElementById("content");
+
 	function handler(response) {
 		const html = response.response_items.map(item => `
 			<div class="col offset-sm-2 col-sm-8 alert alert-primary" style="word-wrap:break-word">
@@ -14,13 +16,15 @@
 				<h5 class="text-muted">${item.originalURL}</h5>
 			</div>
 		`).join("");
-		document.getElementById("content").innerHTML = html;
+		content.innerHTML = html;
 	}
 
 	fetch("https://arquivo.pt/textsearch?q=sapo&maxItems=5&itemsPerSite=1")
 		.then(res => res.json())
 		.then(handler)
-		.catch(err => console.error("Error fetching Arquivo.pt API:", err));
+		.catch(err => {
+			content.innerHTML = `<div class="col offset-sm-2 col-sm-8 alert alert-danger">Failed to load results: ${err.message}</div>`;
+		});
 </script>
 </body>
 </html>
